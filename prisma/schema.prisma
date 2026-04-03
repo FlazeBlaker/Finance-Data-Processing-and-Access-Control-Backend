@@ -1,0 +1,35 @@
+// Prisma schema for Finance Backend (SQLite)
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  name      String
+  email     String   @unique
+  password  String
+  role      String   // "viewer" | "analyst" | "admin"
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+
+  records   Record[]
+}
+
+model Record {
+  id        Int      @id @default(autoincrement())
+  amount    Float
+  type      String   // "income" | "expense"
+  category  String
+  date      DateTime
+  note      String?
+  createdAt DateTime @default(now())
+
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id])
+}

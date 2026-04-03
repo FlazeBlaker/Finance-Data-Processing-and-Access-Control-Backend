@@ -1,0 +1,55 @@
+# Dependencies
+node_modules/
+
+# Environment variables (sensitive)
+.env
+.env.local
+.env.*.local
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
+dev.db
+test.db
+
+# Prisma
+generated/
+prisma/migrations/*/migration.sql.tmp
+
+# Test coverage
+coverage/
+.nyc_output/
+
+# Debug files (keep them local)
+DEBUG-SERVER.js
+server-DEBUG.js
+test-minimal.js
+check-routes.js
+
+# IDE/Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+logs
+*.log
+npm-debug.log*
+
+# AI-related tools (keep local only)
+.claude/
+# .cursor/
+# .windsurfr/
+
+# Build outputs
+dist/
+build/
+
+# Optional: keep local prisma config if present
+# prisma.config.ts
