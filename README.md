@@ -1,25 +1,12 @@
-#  Finance Data Processing & Access Control Backend
+# Finance Data Processing & Access Control Backend
 
 A robust Node.js/Express backend for a finance dashboard system featuring role-based access control, financial record management, and aggregated analytics APIs.
 
 ---
 
-##  Assignment Overview
+## Architecture & Design Decisions
 
-This project fulfills the **Finance Data Processing and Access Control Backend** internship assignment, demonstrating:
-
-- [x] API design and RESTful principles
-- [x] Data modeling with Prisma ORM
-- [x] Role-based access control (RBAC)
-- [x] Aggregated data processing for dashboards
-- [x] Input validation and error handling
-- [x] Clean, maintainable backend architecture
-
----
-
-##  Architecture & Design Decisions
-
-### **Why This Structure?**
+### Project Structure
 
 ```
 ├── server.js                 # Entry point, route mounting
@@ -43,9 +30,9 @@ This project fulfills the **Finance Data Processing and Access Control Backend**
 
 ---
 
-##  Features
+## Features
 
-### **1. User & Role Management**
+### 1. User & Role Management
 - User registration with email uniqueness validation
 - JWT-based authentication (login/logout ready)
 - Role definitions: `viewer` | `analyst` | `admin`
@@ -53,7 +40,7 @@ This project fulfills the **Finance Data Processing and Access Control Backend**
 - bcrypt password hashing (10 salt rounds)
 - Rate limiting on auth endpoints (5 attempts per 15 minutes)
 
-### **2. Financial Records CRUD**
+### 2. Financial Records CRUD
 Complete management of financial entries with fields:
 
 | Field | Type | Description |
@@ -95,7 +82,7 @@ GET /records?type=income&category=food&startDate=2025-04-01&endDate=2025-04-30&p
 }
 ```
 
-### **3. Dashboard Summary APIs**
+### 3. Dashboard Summary APIs
 Aggregated analytics endpoints for financial dashboards:
 
 | Endpoint | Description |
@@ -119,7 +106,7 @@ Aggregated analytics endpoints for financial dashboards:
 }
 ```
 
-### **4. Role-Based Access Control**
+### 4. Role-Based Access Control
 
 | Role | Permissions |
 |------|-------------|
@@ -140,7 +127,7 @@ Aggregated analytics endpoints for financial dashboards:
 
 ---
 
-## 🛠️ Tech Stack
+## Tech Stack
 
 | Technology | Purpose |
 |------------|---------|
@@ -154,13 +141,13 @@ Aggregated analytics endpoints for financial dashboards:
 
 ---
 
-##  Installation & Setup
+## Installation & Setup
 
-### **Prerequisites**
+### Prerequisites
 - Node.js 18+
 - npm or yarn
 
-### **Steps**
+### Steps
 
 1. **Clone and navigate**
 ```bash
@@ -201,7 +188,7 @@ Server will run at: `http://localhost:3000`
 
 ---
 
-##  Authentication Flow
+## Authentication Flow
 
 ```
 1. Register: POST /auth/register
@@ -235,9 +222,9 @@ Server will run at: `http://localhost:3000`
 
 ---
 
-## 📡 API Reference
+## API Reference
 
-### **Authentication Endpoints**
+### Authentication Endpoints
 
 | Method | Endpoint | Access | Description |
 |--------|----------|--------|-------------|
@@ -246,7 +233,7 @@ Server will run at: `http://localhost:3000`
 
 ---
 
-### **Records Endpoints**
+### Records Endpoints
 
 | Method | Endpoint | Access | Description |
 |--------|----------|--------|-------------|
@@ -263,7 +250,7 @@ Server will run at: `http://localhost:3000`
 
 ---
 
-### **Summary Endpoints**
+### Summary Endpoints
 
 All require authentication; Analyst/Admin roles recommended.
 
@@ -278,9 +265,9 @@ All require authentication; Analyst/Admin roles recommended.
 
 ---
 
-##  Testing
+## Testing
 
-### **Automated Tests**
+### Automated Tests
 
 This project includes comprehensive unit and integration tests using Jest and Supertest.
 
@@ -308,7 +295,7 @@ npm run test:watch
 - [x] Summary endpoint tests: aggregate calculations, pagination, sorting, date handling
 - [x] Database cleanup and test isolation
 
-### **Manual Testing with cURL**
+### Manual Testing with cURL
 
 1. **Register a user:**
 ```bash
@@ -361,7 +348,7 @@ curl -X GET "http://localhost:3000/records?page=1&limit=10" \
 
 ---
 
-## 📁 Database Schema
+## Database Schema
 
 ```prisma
 model User {
@@ -392,7 +379,7 @@ model Record {
 
 ---
 
-## 🧩 Assumptions & Constraints
+## Assumptions & Constraints
 
 1. **One user per record** - Each record belongs to exactly one user (no shared records)
 2. **Admin-only writes** - Only users with `admin` role can create, update, or delete records
@@ -407,7 +394,7 @@ model Record {
 
 ---
 
-## [x] Validation & Error Handling
+## Validation & Error Handling
 
 **Input Validation per Endpoint:**
 
@@ -442,9 +429,9 @@ model Record {
 
 ---
 
-## 🧠 Implementation Highlights
+## Implementation Highlights
 
-### **1. Ownership Verification Pattern**
+### 1. Ownership Verification Pattern
 ```javascript
 // Find record with both ID and userId
 const existingRecord = await prisma.record.findFirst({
@@ -462,7 +449,7 @@ Prevents unauthorized access while maintaining security semantics.
 
 ---
 
-### **2. Aggregate Queries for Performance**
+### 2. Aggregate Queries for Performance
 ```javascript
 // Total income
 const result = await prisma.record.aggregate({
@@ -474,7 +461,7 @@ Efficient database-level aggregation; no data transfer overhead.
 
 ---
 
-### **3. Monthly Trends with Client-Side Grouping**
+### 3. Monthly Trends with Client-Side Grouping
 ```javascript
 // Fetch all records (SQLite lacks date extraction functions)
 const records = await prisma.record.findMany({ where: { userId } });
@@ -490,9 +477,9 @@ Workaround for SQLite's limited date functions while maintaining correctness.
 
 ---
 
-##  Design Reflections
+## Design Reflections
 
-### **What Went Well**
+### What Went Well
 
 [x] **Clear separation of concerns** - Controllers, routes, middlewares all have distinct responsibilities
 [x] **Reusable middleware** - `authenticate` and `authorizeRoles` compose cleanly
@@ -501,7 +488,7 @@ Workaround for SQLite's limited date functions while maintaining correctness.
 [x] **Scalable design** - Easy to add new summary endpoints or record fields
 [x] **Production-ready** - Singleton PrismaClient, graceful shutdown, query logging in dev
 
-### **Future Improvements**
+### Future Improvements
 
  **Service layer** - Move business logic from controllers to services for reusability
  **Soft deletes** - Use `deletedAt` field instead of hard deletes for audit trail
@@ -512,24 +499,9 @@ Workaround for SQLite's limited date functions while maintaining correctness.
 
 ---
 
-##  Evaluation Criteria Response
+## Quick Reference
 
-| Requirement | How It's Met |
-|-------------|--------------|
-| **Backend Design** | MVC pattern; routes → controllers → Prisma; reusable middleware |
-| **Logical Thinking** | Ownership checks prevent IDOR; role hierarchy clear; aggregation logic correct |
-| **Functionality** | All CRUD + 6 summary endpoints working; filters functional |
-| **Code Quality** | Consistent naming, single responsibility, DRY validation, clear comments |
-| **Data Modeling** | Prisma schema with proper foreign key relation (User → Record) |
-| **Validation** | Every input validated; helpful error messages; proper status codes |
-| **Documentation** | README + JSDoc comments on all functions |
-| **Thoughtfulness** | JWT auth, flexible filtering, efficient aggregates, error resilience |
-
----
-
-## 🔗 Quick Reference
-
-### **Environment Variables**
+### Environment Variables
 ```env
 DATABASE_URL="file:./dev.db"
 JWT_SECRET=change-this-to-random-string
@@ -537,14 +509,14 @@ PORT=3000
 NODE_ENV=development
 ```
 
-### **Database Commands**
+### Database Commands
 ```bash
 npx prisma generate        # Generate TypeScript client
 npx prisma migrate dev     # Create/apply migrations
 npx prisma studio          # Open database GUI (optional)
 ```
 
-### **Useful Middleware Order**
+### Useful Middleware Order
 ```
 1. express.json()        # Parse request body
 2. authenticate          # Verify JWT, set req.user
@@ -554,31 +526,6 @@ npx prisma studio          # Open database GUI (optional)
 
 ---
 
-## 📄 License
+## License
 
 ISC (as per `package.json`)
-
----
-
-##  Author
-
-Built for **Finance Backend Developer Intern** assignment evaluation.
-
-**Submission Date:** April 2026
-
----
-
-##  Key Learnings Demonstrated
-
-- Secure authentication with JWT and bcrypt
-- Role-based access control implementation
-- Efficient database aggregation with Prisma
-- RESTful API design patterns
-- Error handling and input validation
-- Database schema design with relationships
-- Middleware composition in Express
-- Clean code organization for maintainability
-
----
-
-**Status: [x] Assignment Complete - All Core Requirements Satisfied**
